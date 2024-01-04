@@ -36,7 +36,7 @@ const LandingPage = () => {
           placeholder="Enter your wallet address (0x...)"
           defaultValue={walletAddress}
         />
-        <Button onClick={getTokenHandler} disabled={!walletAddress}>
+        <Button onClick={getTokenHandler}>
           {!isLoaded ? (
             "Get 50 CAL Token"
           ) : (
