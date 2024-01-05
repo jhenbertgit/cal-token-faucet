@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useLayoutEffect, useState } from "react";
 import { ethers } from "ethers";
 import { FaucetError, WindowWithEthereum } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
@@ -54,51 +54,48 @@ export const useCalToken = () => {
     }
   };
 
-  const getCurrentWalletConnected = async () => {
+  const getCurrentWalletConnected = useCallback(async () => {
     // Check if Metamask is installed and available
     if (
       typeof window !== "undefined" &&
       (window as WindowWithEthereum).ethereum
     ) {
       try {
-        // Check if the user is logged in to Metamask
-        if ((window as WindowWithEthereum).ethereum._metamask.isUnlocked()) {
-          // Get the provider using Metamask's Ethereum object
-          const provider = new ethers.BrowserProvider(
-            (window as WindowWithEthereum).ethereum
-          );
+        // Get the provider using Metamask's Ethereum object
+        const provider = new ethers.BrowserProvider(
+          (window as WindowWithEthereum).ethereum
+        );
 
-          // Request the user's accounts using a custom function
-          const accounts = await requestAccount();
+        // Request the user's accounts using a custom function
+        const accounts = await requestAccount();
 
-          // Narrow down the type to avoid potential issues
-          if (!accounts) return;
+        // Narrow down the type to avoid potential issues
+        if (!accounts) return;
 
-          // Check if at least one account is available
-          if (accounts.length > 0) {
-            // Get the signer using the provider
-            setSigner(await provider.getSigner());
+        // Check if at least one account is available
+        if (accounts.length > 0) {
+          // Get the signer using the provider
+          setSigner(await provider.getSigner());
 
-            // Set local contract instance with a provided function (faucetContract)
-            setContract(faucetContract(provider));
+          // Set local contract instance with a provided function (faucetContract)
+          setContract(faucetContract(provider));
 
-            /**
-             * Set the active wallet address.
-             * Note: If using a provider to get accounts, it must be accounts[0].
-             */
-            setWalletAddress(accounts);
-          } else {
-            // Display a warning if no accounts are available
-            toast({
-              variant: "destructive",
-              title: "Caution!",
-              description: "Connect to Metamask using a connect button",
-            });
-          }
+          /**
+           * Set the active wallet address.
+           * Note: If using a provider to get accounts, it must be accounts[0].
+           */
+          setWalletAddress(accounts);
+        } else {
+          // Display a warning if no accounts are available
+          toast({
+            variant: "destructive",
+            title: "Caution!",
+            description: "Connect to Metamask using a connect button",
+          });
         }
       } catch (error) {
         // Log and handle errors during the process
-        console.error((error as Error).message);
+        console.error(error as Error);
       }
     } else {
       // Display a message if Metamask is not installed
@@ -108,9 +105,9 @@ export const useCalToken = () => {
         description: "Please install Metamask to interact with this Web3 app",
       });
     }
-  };
+  }, []);
 
-  const addWalletListener = async () => {
+  const addWalletListener = useCallback(async () => {
     // Check if Metamask is installed and available
     if (
       typeof window !== "undefined" &&
@@ -137,7 +134,7 @@ export const useCalToken = () => {
         description: "Please install Metamask to interact with this Web3 app",
       });
     }
-  };
+  }, []);
 
   const getTokenHandler = async () => {
     try {
@@ -158,21 +155,27 @@ export const useCalToken = () => {
         toast({
           variant: "destructive",
           title: "Caution!",
-          description: "Contract or signer is undefined.",
+          description: "Your wallet is not connected to this webapp.",
         });
       }
     } catch (error) {
       console.error(error as FaucetError);
-      toast({
-        variant: "destructive",
-        title: "Error!",
-        description: (error as FaucetError).reason,
-      });
+      (error as FaucetError).reason
+        ? toast({
+            variant: "destructive",
+            title: "Error!",
+            description: (error as FaucetError).reason,
+          })
+        : toast({
+            variant: "destructive",
+            title: "Error!",
+            description: (error as FaucetError).error.message,
+          });
     }
     setIsLoaded(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     //For update soon
     // const getBal = async () => {
     //   if (contract) {

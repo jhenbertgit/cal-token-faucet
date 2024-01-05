@@ -1,5 +1,5 @@
 import { toast } from "@/components/ui/use-toast";
-import { WindowWithEthereum } from "@/types";
+import { FaucetError, WindowWithEthereum } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -24,7 +24,8 @@ export const requestAccount = async (): Promise<string | null> => {
       return accounts[0];
     } catch (error) {
       // Log and handle errors during the account request
-      console.error((error as Error).message);
+      console.error((error as FaucetError).message);
+
       return null;
     }
   } else {
