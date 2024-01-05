@@ -10,7 +10,7 @@ const MainNav = () => {
   const { walletAddress, connectWallet } = useContext(WalletCtx);
 
   return (
-    <header>
+    <header className="shadow-md dark:shadow-secondary">
       <Container>
         <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between mt-5">
           <div className="flex items-center">
