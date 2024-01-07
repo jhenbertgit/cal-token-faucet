@@ -7,7 +7,7 @@ import { Input } from "../components/ui/input";
 
 const CardFaucet = () => {
   const { walletAddress, isLoaded, getTokenHandler } = useContext(WalletCtx);
-  
+
   return (
     <div className="flex items-center justify-center">
       <Card className="w-full max-w-2xl shadow-md dark:shadow-secondary">

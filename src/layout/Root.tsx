@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { MainNav, Footer } from "@/components";
+import { MainNav } from "@/components";
 import { Toaster } from "@/components/ui/toaster";
 import Container from "@/components/ui/Container";
 
@@ -10,7 +10,6 @@ const RootLayout = () => {
       <Container>
         <Outlet />
       </Container>
-      <Footer />
       <Toaster />
     </>
   );
