@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom";
-import { MainNav } from "@/components";
+import { MainNav, Footer } from "@/components";
 import { Toaster } from "@/components/ui/toaster";
-import Container from "@/components/ui/Container";
 
 const RootLayout = () => {
   return (
     <>
       <MainNav />
-      <Container>
+      <div className="flex flex-col min-h-screen">
         <Outlet />
-      </Container>
+        <Footer />
+      </div>
       <Toaster />
     </>
   );
