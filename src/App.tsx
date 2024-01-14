@@ -1,9 +1,8 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { useCalToken } from "./hooks/use-cal-token";
-import { WalletCtx } from "./context/wallet-ctx";
 import RootLayout from "./layout/Root";
 import LandingPage from "./pages/LandingPage";
 import ThemeProvider from "./layout/ThemeProvider";
+import WalletCtxProvider from "./layout/WalletCtxProvider";
 
 const router = createBrowserRouter([
   {
@@ -19,22 +18,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const { connectWallet, getTokenHandler, walletAddress, txHash, isLoaded } =
-    useCalToken();
-
-  const value = {
-    connectWallet,
-    getTokenHandler,
-    walletAddress,
-    txHash,
-    isLoaded,
-  };
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="CalToken">
-      <WalletCtx.Provider value={value}>
+      <WalletCtxProvider>
         <RouterProvider router={router} />
-      </WalletCtx.Provider>
+      </WalletCtxProvider>
     </ThemeProvider>
   );
 }
